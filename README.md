@@ -33,9 +33,20 @@
 - Criar a tabela do comandor_por_owner
 
   CREATE TABLE ingestor.comandos_por_owner (
+    offset int,
+    tags text,
+    version int,
     owner text,
     id int,
-    version int,
-    tags text,
     PRIMARY KEY ((owner), id)
   );
+
+## Ingestor
+
+- Na pasta plataforma/ingestor, rodar o comando
+
+  docker run --rm -it -v %cd%:/work -w /work --name ingestor clojure:lein-2.9.3 bash
+
+- Comando para subir um único consumidor
+
+  lein run consumer
