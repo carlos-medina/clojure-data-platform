@@ -41,6 +41,17 @@
     PRIMARY KEY ((owner), id)
   );
 
+- Tabela de testes que armazena todos os comandos
+
+  CREATE TABLE ingestor.comandos_por_owner_teste (
+    offset int,
+    tags text,
+    version int,
+    owner text,
+    id int,
+    PRIMARY KEY ((owner), id, version)
+  );
+
 ## Ingestor
 
 - Na pasta plataforma/ingestor, rodar o comando

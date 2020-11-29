@@ -48,4 +48,4 @@
                                   (.key record)
                                   (.value record)
                                   (.partition record)))
-                         (db/upsert-cmd (.value record) session (.offset record)))))))))
+                         (db/upsert-cmd-teste (.value record) session (.offset record)))))))))

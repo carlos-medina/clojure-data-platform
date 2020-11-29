@@ -21,5 +21,23 @@
     (.setInt stmt "version" (:Version cmd))
     (.setString stmt "owner" (:Owner cmd))
     (.setInt stmt "id" (:ID cmd))
-    #_(.executeAsync session stmt)
+    (.execute session stmt)))
+
+;; Tabela de testes: Todos os comandos são salvos
+(defn qry-upsert-cmd-teste [session]
+  (.prepare session (str "UPDATE comandos_por_owner_teste"
+                         "   SET offset = :offset,"
+                         "       tags = :tags"
+                         " WHERE owner = :owner"
+                         "   AND id = :id"
+                         "   AND version = :version")))
+
+(defn upsert-cmd-teste [cmd session offset]
+  (let [cmd (util/str->coll cmd)
+        stmt (-> session qry-upsert-cmd-teste .bind)]
+    (.setInt stmt "offset" offset)
+    (.setString stmt "tags" (-> cmd :Tags util/coll->str))
+    (.setInt stmt "version" (:Version cmd))
+    (.setString stmt "owner" (:Owner cmd))
+    (.setInt stmt "id" (:ID cmd))
     (.execute session stmt)))
