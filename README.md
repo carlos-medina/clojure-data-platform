@@ -72,8 +72,14 @@ docker exec -it cassandra-1 cqlsh
 docker run --rm -it -v %cd%:/work -w /work --name ingestor clojure:lein-2.9.3 bash
 ```
 
-- Comando para subir um único consumidor
+- Comando para subir um consumidor em modo teste
 
 ```
-lein run consumer
+lein run teste
+```
+
+- Comando para subir um consumidor em modo produção
+
+```
+lein run prd
 ```
