@@ -1,5 +1,5 @@
 (ns ingestor.core
-  (:require [ingestor.db :as db])
+  (:require [ingestor.model :as model])
   (:import [com.datastax.driver.core Cluster ConsistencyLevel HostDistance PoolingOptions QueryOptions]
            [com.datastax.driver.core.policies LatencyAwarePolicy Policies]
            [org.apache.kafka.clients.consumer KafkaConsumer]))
@@ -48,4 +48,20 @@
                                   (.key record)
                                   (.value record)
                                   (.partition record)))
-                         (db/upsert-cmd-teste (.value record) session (.offset record)))))))))
+                         (model/upsert-cmd (.value record) session (.offset record))
+                         (model/upsert-cmd-teste (.value record) session (.offset record))
+
+                        ;  (println "Retorno do qry-select-version:\n"
+                        ;           (db/select-version (.value record) session)
+                        ;           "\n")
+                        ;  (println "First do retorno do qry-select-version:\n"
+                        ;           (first (db/select-version (.value record) session))
+                        ;           "\n")
+                        ;  (println "Type do first do retorno do qry-select-version:\n"
+                        ;           (type (first (db/select-version (.value record) session)))
+                        ;           "\n")
+                         
+                        ;  (println ".getInt do first do retorno do qry-select-version:\n"
+                        ;           (.getInt (first (db/select-version (.value record) session)) "version")
+                        ;           "\n")
+                         )))))))
