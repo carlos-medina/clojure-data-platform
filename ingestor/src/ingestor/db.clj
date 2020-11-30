@@ -1,6 +1,20 @@
 (ns ingestor.db
   (:require [ingestor.util :as util]))
 
+(defn qry-select-version [session]
+  (.prepare session (str "SELECT version"
+                         "  FROM comandos_por_owner"
+                         " WHERE owner = :owner"
+                         "   AND id = :id")))
+
+(defn select-version [cmd session]
+  (let [cmd (util/str->coll cmd)
+        stmt (-> session qry-select-version .bind)]
+    (.setString stmt "owner" (:Owner cmd))
+    (.setInt stmt "id" (:ID cmd))
+    (when-let [result (first (.execute session stmt))]
+      (.getInt result "version"))))
+
 ;; TODO: remover offset. Estou salvando no momento só para garantir que não estou perdendo dados
 (defn qry-upsert-cmd [session]
   (.prepare session (str "UPDATE comandos_por_owner"
