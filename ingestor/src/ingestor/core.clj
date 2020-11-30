@@ -33,35 +33,36 @@
         cluster (-> (Cluster/builder)
                     (configs-cassandra false)
                     (.build))
-        session (.connect cluster "ingestor")]
+        session (.connect cluster "ingestor")
+        grupo-de-consumo "1" ;(str (rand))
+        consumer (new-consumer grupo-de-consumo)
+        _ (.subscribe consumer ["documents"])]
     (case interface
-      "consumer" (let [grupo-de-consumo "1" ;(str (rand))
-                       consumer (new-consumer grupo-de-consumo)]
-                   (println "Começando a leitura das mensagens")
-                   (.subscribe consumer ["documents"])
-                   (while true ; doseq [i (range 1 5)]
-                     (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
-                       (doseq [record records]
-                         (println
-                          (format "Fazendo insert no BD do comando:\noffset = %s\nkey = %s\nvalue = %s\npartition = %s\n"
-                                  (.offset record)
-                                  (.key record)
-                                  (.value record)
-                                  (.partition record)))
-                         (model/upsert-cmd (.value record) session (.offset record))
-                         (model/upsert-cmd-teste (.value record) session (.offset record))
-
-                        ;  (println "Retorno do qry-select-version:\n"
-                        ;           (db/select-version (.value record) session)
-                        ;           "\n")
-                        ;  (println "First do retorno do qry-select-version:\n"
-                        ;           (first (db/select-version (.value record) session))
-                        ;           "\n")
-                        ;  (println "Type do first do retorno do qry-select-version:\n"
-                        ;           (type (first (db/select-version (.value record) session)))
-                        ;           "\n")
-                         
-                        ;  (println ".getInt do first do retorno do qry-select-version:\n"
-                        ;           (.getInt (first (db/select-version (.value record) session)) "version")
-                        ;           "\n")
-                         )))))))
+      "teste"
+      (do
+       (println "Modo teste: Começando a leitura das mensagens")
+       (while true ; doseq [i (range 1 5)]
+         (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
+           (doseq [record records]
+             (println
+              (format "Fazendo insert no BD do comando:\noffset = %s\nkey = %s\nvalue = %s\npartition = %s\n"
+                       (.offset record)
+                       (.key record)
+                       (.value record)
+                       (.partition record)))
+             (model/upsert-cmd (.value record) session (.offset record))
+             (model/upsert-cmd-teste (.value record) session (.offset record))))))
+              
+      "prd"
+      (do
+       (println "Modo prd: Começando a leitura das mensagens")
+       (while true ; doseq [i (range 1 5)]
+         (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
+           (doseq [record records]
+             (println
+              (format "Fazendo insert no BD do comando:\noffset = %s\nkey = %s\nvalue = %s\npartition = %s\n"
+                       (.offset record)
+                       (.key record)
+                       (.value record)
+                       (.partition record)))
+             (model/upsert-cmd (.value record) session (.offset record)))))))))
