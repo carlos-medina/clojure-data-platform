@@ -35,7 +35,7 @@
     (.setInt stmt "version" (:Version cmd))
     (.setString stmt "owner" (:Owner cmd))
     (.setInt stmt "id" (:ID cmd))
-    (.execute session stmt)))
+    (.executeAsync session stmt)))
 
 ;; Tabela de testes: Todos os comandos são salvos
 (defn qry-upsert-cmd-teste [session]
@@ -54,4 +54,4 @@
     (.setInt stmt "version" (:Version cmd))
     (.setString stmt "owner" (:Owner cmd))
     (.setInt stmt "id" (:ID cmd))
-    (.execute session stmt)))
+    (.executeAsync session stmt)))
