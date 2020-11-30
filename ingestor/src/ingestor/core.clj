@@ -46,10 +46,10 @@
            (doseq [record records]
              (println
               (format "Fazendo insert no BD do comando:\noffset = %s\nkey = %s\nvalue = %s\npartition = %s\n"
-                       (.offset record)
-                       (.key record)
-                       (.value record)
-                       (.partition record)))
+                      (.offset record)
+                      (.key record)
+                      (.value record)
+                      (.partition record)))
              (model/upsert-cmd (.value record) session (.offset record))
              (model/upsert-cmd-teste (.value record) session (.offset record))))))
               
@@ -61,8 +61,8 @@
            (doseq [record records]
              (println
               (format "Fazendo insert no BD do comando:\noffset = %s\nkey = %s\nvalue = %s\npartition = %s\n"
-                       (.offset record)
-                       (.key record)
-                       (.value record)
-                       (.partition record)))
+                      (.offset record)
+                      (.key record)
+                      (.value record)
+                      (.partition record)))
              (model/upsert-cmd (.value record) session (.offset record)))))))))
