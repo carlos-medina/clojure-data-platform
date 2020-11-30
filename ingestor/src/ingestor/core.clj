@@ -21,12 +21,12 @@
 
 (defn new-consumer [group-id]
   (KafkaConsumer.
-   {"bootstrap.servers"                     "kafka-teste.dev-arquivei.com.br:29092"
-    "group.id"                              group-id
-    "enable.auto.commit"                    "false"
-    "key.deserializer"                      "org.apache.kafka.common.serialization.StringDeserializer"
-    "value.deserializer"                    "org.apache.kafka.common.serialization.StringDeserializer"
-    "auto.offset.reset"                     "earliest"}))
+   {"bootstrap.servers" "kafka-teste.dev-arquivei.com.br:29092"
+    "group.id" group-id
+    "enable.auto.commit" "false"
+    "key.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"
+    "value.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"
+    "auto.offset.reset" "earliest"}))
 
 (defn -main [& args]
   (let [interface (first args)
