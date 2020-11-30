@@ -34,14 +34,14 @@
                     (configs-cassandra false)
                     (.build))
         session (.connect cluster "ingestor")
-        grupo-de-consumo "1" ;(str (rand))
+        grupo-de-consumo "1"
         consumer (new-consumer grupo-de-consumo)
         _ (.subscribe consumer ["documents"])]
     (case interface
       "teste"
       (do
        (println "Modo teste: Começando a leitura das mensagens")
-       (while true ; doseq [i (range 1 5)]
+       (while true
          (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
            (doseq [record records]
              (println
@@ -56,7 +56,7 @@
       "prd"
       (do
        (println "Modo prd: Começando a leitura das mensagens")
-       (while true ; doseq [i (range 1 5)]
+       (while true
          (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
            (doseq [record records]
              (println
