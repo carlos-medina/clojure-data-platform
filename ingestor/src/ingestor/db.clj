@@ -55,3 +55,17 @@
     (.setString stmt "owner" (:Owner cmd))
     (.setInt stmt "id" (:ID cmd))
     (.executeAsync session stmt)))
+
+;; Tabela de testes: Lista dos owners
+(defn qry-upsert-owner-teste [session]
+  (.prepare session (str "INSERT INTO owners"
+                         "       (particao,owner)"
+                         "       VALUES "
+                         "       (:particao,:owner)")))
+
+(defn upsert-owner-teste [cmd session]
+  (let [cmd (util/str->coll cmd)
+        stmt (-> session qry-upsert-owner-teste .bind)]
+    (.setInt stmt "particao" 1)
+    (.setString stmt "owner" (:Owner cmd))
+    (.executeAsync session stmt)))
