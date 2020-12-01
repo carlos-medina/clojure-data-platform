@@ -51,7 +51,8 @@
                       (.value record)
                       (.partition record)))
              (model/upsert-cmd (.value record) session (.offset record))
-             (model/upsert-cmd-teste (.value record) session (.offset record))))))
+             (model/upsert-cmd-teste (.value record) session (.offset record))
+             (model/upsert-owner-teste (.value record) session)))))
               
       "prd"
       (do
