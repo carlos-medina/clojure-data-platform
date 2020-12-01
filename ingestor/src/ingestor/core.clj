@@ -23,7 +23,8 @@
   (KafkaConsumer.
    {"bootstrap.servers" "kafka-teste.dev-arquivei.com.br:29092"
     "group.id" group-id
-    "enable.auto.commit" "false"
+    "enable.auto.commit" "true"
+    "auto.commit.interval.ms" "1000"
     "key.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"
     "value.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"
     "auto.offset.reset" "earliest"}))
