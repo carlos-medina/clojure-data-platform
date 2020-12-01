@@ -18,3 +18,7 @@
 ;; Tabela de testes: Todos os comandos são salvos
 (defn upsert-cmd-teste [cmd session offset]
   (db/upsert-cmd-teste cmd session offset))
+
+;; Tabela de testes: Lista dos owners
+(defn upsert-owner-teste [cmd session]
+  (db/upsert-owner-teste cmd session))
