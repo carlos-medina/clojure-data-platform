@@ -34,7 +34,7 @@
                     (configs-cassandra false)
                     (.build))
         session (.connect cluster "ingestor")
-        grupo-de-consumo "1"
+        grupo-de-consumo "2020-12-01-1"
         consumer (new-consumer grupo-de-consumo)
         _ (.subscribe consumer ["documents"])]
     (case interface
