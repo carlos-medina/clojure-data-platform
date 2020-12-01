@@ -64,6 +64,16 @@ docker exec -it cassandra-1 cqlsh
   );
 ```
 
+- Tabela de testes que armazena todos os owners
+
+```
+CREATE TABLE ingestor.owners (
+  particao int,
+  owner text,
+  PRIMARY KEY ((particao), owner)
+);
+```
+
 ## Ingestor
 
 - Na pasta plataforma/ingestor, rodar o comando
