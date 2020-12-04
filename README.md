@@ -93,3 +93,17 @@ lein run teste
 ```
 lein run prd
 ```
+
+## API
+
+- Na pasta plataforma/api, rodar o comando
+
+```
+docker run --rm -it -v %cd%:/work -w /work --name api -p 3000:3000 clojure:lein-2.9.3 lein repl
+```
+
+- Comando para iniciar a API na porta 3000
+
+```
+(start)
+```
