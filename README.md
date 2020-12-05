@@ -113,3 +113,16 @@ docker run --rm -it -v %cd%:/work -w /work --name api -p 3000:3000 clojure:lein-
 ```
 (stop s)
 ```
+
+- A requisição para a API deve ter o formato abaixo informado no body:
+
+```
+{
+	"Owner": "owner1", <- Obrigatório
+	"Filters": {       <- Opcional
+		"Tags": [
+			"tag1"
+		]
+	}
+}
+```
