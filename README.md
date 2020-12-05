@@ -102,8 +102,14 @@ lein run prd
 docker run --rm -it -v %cd%:/work -w /work --name api -p 3000:3000 clojure:lein-2.9.3 lein repl
 ```
 
-- Comando para iniciar a API na porta 3000
+- Comando para inicializar o servidor da API na porta 3000
 
 ```
-(start)
+(def s (start))
+```
+
+- Comando para encerrar o servidor da API
+
+```
+(stop s)
 ```

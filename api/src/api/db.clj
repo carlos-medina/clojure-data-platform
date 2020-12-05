@@ -21,38 +21,20 @@
                              (.setDefaultIdempotence true)))))
 
 (defn start []
-  (swap! session
-    (fn [session] (.connect
-                   (-> (Cluster/builder)
-                       (configs-cassandra false)
-                       (.build)) "ingestor"))))
+  (reset! session
+    (.connect
+     (-> (Cluster/builder)
+         (configs-cassandra false)
+         (.build)) "ingestor")))
 
-(defn qry-select-comandos-owner [session]
+(defn qry-select-comandos-owner []
   (.prepare @session (str "SELECT *"
                           "  FROM comandos_por_owner"
                           " WHERE owner = :owner")))
 
-(defn select-comandos-owner [session request]
-  (let [stmt (-> session qry-select-comandos-owner .bind)]
+(defn select-comandos-owner [request]
+  (let [stmt (.bind (qry-select-comandos-owner))]
     (.setString stmt "owner" ((request :params) "Owner"))
     ;; TODO: trocar o first para pegar todos os comandos
-    (when-let [result (first (.execute @session stmt))]
-      (.getInt result "version"))))
-
-
-; owner = "00948406900504"
-; id = 95971
-; version = 6
-
-(defn qry-select-version [session]
-  (.prepare @session (str "SELECT version"
-                         "  FROM comandos_por_owner"
-                         " WHERE owner = :owner"
-                         "   AND id = :id")))
-
-(defn select-version [session]
-  (let [stmt (-> session qry-select-version .bind)]
-    (.setString stmt "owner" "00948406900504")
-    (.setInt stmt "id" 95971)
     (when-let [result (first (.execute @session stmt))]
       (.getInt result "version"))))

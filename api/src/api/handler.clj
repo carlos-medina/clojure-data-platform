@@ -1,11 +1,12 @@
 (ns api.handler
-  (:require [ring.middleware.json :refer :all]))
+  (:require [ring.middleware.json :refer :all]
+            [api.db :as db]))
 
-;; TODO: Passar a session como parâmetro do handler?
 (defn handler-200-request [request]
   {:status 200
+   ;; TODO: Tipo do conteúdo e o conteúdo do body não deveria ser JSON?
    :headers {"Content-type" "text/html"}
-   :body (str request)})
+   :body (str (db/select-comandos-owner request))})
 
 (def app
   (-> handler-200-request
