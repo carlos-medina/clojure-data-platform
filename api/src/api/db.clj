@@ -37,8 +37,6 @@
     (remove nil? (reduce filtro [] comandos))))
 
 (defn formata-resposta [comandos]
-  ;; TODO: Versão final tem que ter a saída como JSON
-  ;; comandos por ser vazio ou pode ser um vetor de objetos do cassandra
   (let [formata-documento (fn [comando] {"ID" (.getInt comando "id")
                                          "Version" (.getInt comando "version")
                                          "Tag" (util/str->coll (.getString comando "tags"))})
@@ -55,10 +53,7 @@
     (.setString stmt "owner" (-> request (get :params) (get "Owner")))
     (let [result (.execute @session stmt)]
       (if (empty? result)
-        ;; TODO: Tirar o do com o print e deixar só o segundo comando
-        (do
-         (println "Select vazio")
-         (formata-resposta result))
+        (formata-resposta result)
         (let [tags (-> request (get :params) (get "Filters") (get "Tags"))]
           (if (empty? tags)
             (formata-resposta result)
