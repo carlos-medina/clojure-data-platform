@@ -3,8 +3,6 @@
   (:import [com.datastax.driver.core Cluster ConsistencyLevel HostDistance PoolingOptions QueryOptions]
            [com.datastax.driver.core.policies LatencyAwarePolicy Policies]))
 
-(def session (atom nil))
-
 (defn configs-cassandra [builder quorum?]
   (-> builder
       (.addContactPoint "host.docker.internal")
@@ -20,6 +18,8 @@
                                                      ConsistencyLevel/ONE))
                              (.setDefaultIdempotence true)))))
 
+(def session (atom nil))
+
 (defn start []
   (reset! session
     (.connect
@@ -27,14 +27,40 @@
          (configs-cassandra false)
          (.build)) "ingestor")))
 
+(defn filtra-comandos-por-tag [comandos tags]
+  (let [tags (set tags)
+        filtro (fn [filtrados comando]
+                 (conj filtrados
+                       (when
+                        (clojure.set/subset? tags (set (util/str->coll (.getString comando "tags"))))
+                        comando)))]
+    (remove nil? (reduce filtro [] comandos))))
+
+(defn formata-resposta [comandos]
+  ;; TODO: Versão final tem que ter a saída como JSON
+  ;; comandos por ser vazio ou pode ser um vetor de objetos do cassandra
+  (let [formata-documento (fn [comando] {"ID" (.getInt comando "id")
+                                         "Version" (.getInt comando "version")
+                                         "Tag" (util/str->coll (.getString comando "tags"))})
+        documentos (reduce #(conj %1 (formata-documento %2)) [] comandos)]
+    {"Documents" documentos}))
+
 (defn qry-select-comandos-owner []
   (.prepare @session (str "SELECT *"
                           "  FROM comandos_por_owner"
                           " WHERE owner = :owner")))
 
-(defn select-comandos-owner [request]
+(defn select-comandos-owner-por-tag [request]
   (let [stmt (.bind (qry-select-comandos-owner))]
-    (.setString stmt "owner" ((request :params) "Owner"))
-    ;; TODO: trocar o first para pegar todos os comandos
-    (when-let [result (first (.execute @session stmt))]
-      (.getInt result "version"))))
+    (.setString stmt "owner" (-> request (get :params) (get "Owner")))
+    (let [result (.execute @session stmt)]
+      (if (empty? result)
+        ;; TODO: Tirar o do com o print e deixar só o segundo comando
+        (do
+         (println "Select vazio")
+         (formata-resposta result))
+        (let [tags (-> request (get :params) (get "Filters") (get "Tags"))]
+          (if (empty? tags)
+            (formata-resposta result)
+            (formata-resposta (filtra-comandos-por-tag result tags))))))))
+
