@@ -12,7 +12,7 @@
         _ (println "Version anterior:\n" version-anterior "\n")
         _ (println "Version atual:\n" version-atual "\n")]
     (when (or (= nil version-anterior)
-            (< version-anterior version-atual))
+              (< version-anterior version-atual))
       (db/upsert-cmd cmd session offset))))
 
 ;; Tabela de testes: Todos os comandos são salvos
