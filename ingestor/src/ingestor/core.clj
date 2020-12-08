@@ -1,5 +1,6 @@
 (ns ingestor.core
-  (:require [ingestor.model :as model])
+  (:require [ingestor.log :as log]
+            [ingestor.model :as model])
   (:import [com.datastax.driver.core Cluster ConsistencyLevel HostDistance PoolingOptions QueryOptions]
            [com.datastax.driver.core.policies LatencyAwarePolicy Policies]
            [org.apache.kafka.clients.consumer KafkaConsumer]))
@@ -30,41 +31,32 @@
     "auto.offset.reset" "earliest"}))
 
 (defn -main [& args]
-  (let [interface (first args)
+  (let [modo (first args)
         cluster (-> (Cluster/builder)
                     (configs-cassandra false)
                     (.build))
         session (.connect cluster "ingestor")
-        grupo-de-consumo "2020-12-01-1"
+        grupo-de-consumo "2020-12-08.01"
         consumer (new-consumer grupo-de-consumo)
         _ (.subscribe consumer ["documents"])]
-    (case interface
+    (case modo
       "teste"
       (do
+       (log/start modo)
        (println "Modo teste: Começando a leitura das mensagens")
        (while true
          (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
            (doseq [record records]
-             (println
-              (format "Fazendo insert no BD do comando:\noffset = %s\nkey = %s\nvalue = %s\npartition = %s\n"
-                      (.offset record)
-                      (.key record)
-                      (.value record)
-                      (.partition record)))
+             (log/insert record)
              (model/upsert-cmd (.value record) session (.offset record))
              (model/upsert-cmd-teste (.value record) session (.offset record))
              (model/upsert-owner-teste (.value record) session)))))
               
       "prd"
       (do
-       (println "Modo prd: Começando a leitura das mensagens")
+       (log/start modo)
        (while true
          (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
            (doseq [record records]
-             (println
-              (format "Fazendo insert no BD do comando:\noffset = %s\nkey = %s\nvalue = %s\npartition = %s\n"
-                      (.offset record)
-                      (.key record)
-                      (.value record)
-                      (.partition record)))
+             (log/insert record)
              (model/upsert-cmd (.value record) session (.offset record)))))))))
