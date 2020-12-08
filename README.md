@@ -2,10 +2,12 @@
 
 ## Buildar as imagens
 
-- Na pasta fiel/cassandra, executar o comando
+- Na raiz, executar os comandos
 
 ```
-docker build -t c/cassandra .
+  docker build -t c/cassandra ./fiel/cassandra
+  docker build -t c/ingestor ./ingestor
+  docker build -t c/api ./api
 ```
 
 ## Cassandra
@@ -28,7 +30,7 @@ docker build -t c/cassandra .
 - Executar o comando cqlsh no contêiner do Cassandra
 
 ```
-docker exec -it cassandra-1 cqlsh
+  docker exec -it cassandra-1 cqlsh
 ```
 
 - Criar o keyspace do ingestor
@@ -67,31 +69,31 @@ docker exec -it cassandra-1 cqlsh
 - Tabela de testes que armazena todos os owners
 
 ```
-CREATE TABLE ingestor.owners (
-  particao int,
-  owner text,
-  PRIMARY KEY ((particao), owner)
-);
+  CREATE TABLE ingestor.owners (
+    particao int,
+    owner text,
+    PRIMARY KEY ((particao), owner)
+  );
 ```
 
 ## Ingestor
 
-- Na pasta plataforma/ingestor, rodar o comando
+- Subir o contêiner do ingestor
 
 ```
-docker run --rm -it -v %cd%:/work -w /work --name ingestor clojure:lein-2.9.3 bash
+  docker run --rm -it -v %cd%/ingestor:/work -w /work --name ingestor c/ingestor bash
 ```
 
-- Comando para subir um consumidor em modo teste
+- Comando para criar um consumidor em modo teste
 
 ```
-lein run teste
+  lein run teste
 ```
 
-- Comando para subir um consumidor em modo produção
+- Comando para criar um consumidor em modo produção
 
 ```
-lein run prd
+  lein run prd
 ```
 
 ## API
@@ -99,30 +101,31 @@ lein run prd
 - Na pasta plataforma/api, rodar o comando
 
 ```
-docker run --rm -it -v %cd%:/work -w /work --name api -p 3000:3000 clojure:lein-2.9.3 lein repl
+  docker run --rm -it -v %cd%:/work -w /work --name api -p 3000:3000 clojure:lein-2.9.3 lein repl
+  docker run --rm -it -v %cd%/api:/work -w /work --name api -p 3000:3000 c/api lein repl
 ```
 
 - Comando para inicializar o servidor da API na porta 3000
 
 ```
-(def s (start))
+  (def s (start))
 ```
 
 - Comando para encerrar o servidor da API
 
 ```
-(stop s)
+  (stop s)
 ```
 
 - A requisição para a API deve ter o formato abaixo informado no body:
 
 ```
-{
-	"Owner": "owner1", <- Obrigatório
-	"Filters": {       <- Opcional
-		"Tags": [
-			"tag1"
-		]
-	}
-}
+  {
+    "Owner": "owner1", <- Obrigatório
+    "Filters": {       <- Opcional
+      "Tags": [
+        "tag1"
+      ]
+    }
+  }
 ```
