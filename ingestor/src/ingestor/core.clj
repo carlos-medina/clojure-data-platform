@@ -43,7 +43,6 @@
       "teste"
       (do
        (log/start modo)
-       (println "Modo teste: Começando a leitura das mensagens")
        (while true
          (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
            (doseq [record records]
