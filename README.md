@@ -101,7 +101,6 @@
 - Na pasta plataforma/api, rodar o comando
 
 ```
-  docker run --rm -it -v %cd%:/work -w /work --name api -p 3000:3000 clojure:lein-2.9.3 lein repl
   docker run --rm -it -v %cd%/api:/work -w /work --name api -p 3000:3000 c/api lein repl
 ```
 
