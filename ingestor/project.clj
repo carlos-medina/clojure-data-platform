@@ -6,12 +6,9 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.apache.kafka/kafka_2.12 "2.4.1"]
                  [com.fzakaria/slf4j-timbre "0.3.17"]
+                 [io.netty/netty-transport-native-epoll "4.1.9.Final"]
                  [com.datastax.cassandra/cassandra-driver-core "3.8.0"]
-                 [metosin/jsonista "0.2.5"]
-                 ;; [io.netty/netty "3.4.5.Final"]
-                 ;; [io.netty/netty "3.9.9.Final"]
-                 ;; [io.netty/netty-tcnative-boringssl-static "2.0.9.Final"]
-                 [io.netty/netty-transport-native-epoll "4.1.9.Final"]]
+                 [metosin/jsonista "0.2.5"]]
   :main ^:skip-aot ingestor.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
