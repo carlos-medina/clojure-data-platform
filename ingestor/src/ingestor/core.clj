@@ -48,7 +48,7 @@
          (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
            (doseq [record records]
              (log/insert record)
-             (model/upsert-cmd (.value record) session (.offset record))
+             (model/upsert-cmd (.value record) session)
              (model/upsert-cmd-teste (.value record) session (.offset record))
              (model/upsert-owner-teste (.value record) session)))))
               
@@ -59,4 +59,4 @@
          (let [records (.poll consumer (java.time.Duration/ofMillis 5000))]
            (doseq [record records]
              (log/insert record)
-             (model/upsert-cmd (.value record) session (.offset record)))))))))
+             (model/upsert-cmd (.value record) session))))))))

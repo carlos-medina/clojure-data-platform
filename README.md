@@ -44,7 +44,6 @@
 
 ```
   CREATE TABLE ingestor.comandos_por_owner (
-    offset int,
     tags text,
     version int,
     owner text,

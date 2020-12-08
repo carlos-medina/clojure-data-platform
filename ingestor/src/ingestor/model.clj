@@ -3,7 +3,7 @@
             [ingestor.util :as util]))
 
 ;; TODO: remover offset. Estou salvando no momento só para garantir que não estou perdendo dados
-(defn upsert-cmd [cmd session offset]
+(defn upsert-cmd [cmd session]
   "Atualiza o comando na tabela comandos_por_owner caso não exista um ou o comando anterior possua
   uma version menor que o comando atual. Caso o comando anterior possuir uma version maior, retorna
   nil."
@@ -13,7 +13,7 @@
         _ (println "Version atual:\n" version-atual "\n")]
     (when (or (= nil version-anterior)
               (< version-anterior version-atual))
-      (db/upsert-cmd cmd session offset))))
+      (db/upsert-cmd cmd session))))
 
 ;; Tabela de testes: Todos os comandos são salvos
 (defn upsert-cmd-teste [cmd session offset]
