@@ -98,7 +98,7 @@
 
 ## API
 
-- Na pasta plataforma/api, rodar o comando
+- Subir o contêiner da API
 
 ```
   docker run --rm -it -v %cd%/api:/work -w /work --name api -p 3000:3000 c/api lein repl
