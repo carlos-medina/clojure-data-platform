@@ -56,6 +56,7 @@
 
 ```
   CREATE TABLE ingestor.comandos_por_owner_teste (
+    particao int,
     offset int,
     tags text,
     version int,

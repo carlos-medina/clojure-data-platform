@@ -48,7 +48,7 @@
            (doseq [record records]
              (log/insert record)
              (model/upsert-cmd (.value record) session)
-             (model/upsert-cmd-teste (.value record) session (.offset record))
+             (model/upsert-cmd-teste (.value record) session (.partition record) (.offset record))
              (model/upsert-owner-teste (.value record) session)))))
               
       "prd"

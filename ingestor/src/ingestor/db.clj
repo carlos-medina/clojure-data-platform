@@ -33,15 +33,17 @@
 
 (defn qry-upsert-cmd-teste [session]
   (.prepare session (str "UPDATE comandos_por_owner_teste"
-                         "   SET offset = :offset,"
+                         "   SET particao = :particao,"
+                         "       offset = :offset,"
                          "       tags = :tags"
                          " WHERE owner = :owner"
                          "   AND id = :id"
                          "   AND version = :version")))
 
-(defn upsert-cmd-teste [cmd session offset]
+(defn upsert-cmd-teste [cmd session particao offset]
   (let [cmd (util/str->coll cmd)
         stmt (-> session qry-upsert-cmd-teste .bind)]
+    (.setInt stmt "particao" particao)
     (.setInt stmt "offset" offset)
     (.setString stmt "tags" (-> cmd :Tags util/coll->str))
     (.setInt stmt "version" (:Version cmd))
