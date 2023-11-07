@@ -1,8 +1,8 @@
-# Plataforma
+# Data Plataform
 
-## Buildar as imagens
+## Build the images
 
-- Na raiz, executar os comandos
+- Execute the following commands
 
 ```
   docker build -t c/cassandra ./fiel/cassandra
@@ -12,7 +12,7 @@
 
 ## Cassandra
 
-- Subir um contêiner do Cassandra
+- Run a Cassandra container
 
 ```
   docker run --rm -d
@@ -27,20 +27,20 @@
     c/cassandra
 ```
 
-- Executar o comando cqlsh no contêiner do Cassandra
+- Execute cqlsh in Cassandra's container
 
 ```
   docker exec -it cassandra-1 cqlsh
 ```
 
-- Criar o keyspace do ingestor
+- Create Ingestor's keyspace
 
 ```
   CREATE KEYSPACE ingestor
     WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};
 ```
 
-- Criar a tabela do comandor_por_owner
+- Create table **comando_por_owner**
 
 ```
   CREATE TABLE ingestor.comandos_por_owner (
@@ -52,7 +52,7 @@
   );
 ```
 
-- Tabela de testes que armazena todos os comandos
+- Create test table that saves all commands
 
 ```
   CREATE TABLE ingestor.comandos_por_owner_teste (
@@ -66,7 +66,7 @@
   );
 ```
 
-- Tabela de testes que armazena todos os owners
+- Create test table that saves all owners
 
 ```
   CREATE TABLE ingestor.owners (
@@ -78,19 +78,19 @@
 
 ## Ingestor
 
-- Subir o contêiner do ingestor
+- Run Ingestor container
 
 ```
   docker run --rm -it -v %cd%/ingestor:/work -w /work --name ingestor c/ingestor bash
 ```
 
-- Comando para criar um consumidor em modo teste
+- Command that creates a kafka consumer on test mode
 
 ```
   lein run teste
 ```
 
-- Comando para criar um consumidor em modo produção
+- Command that creates a consumer in production mode
 
 ```
   lein run prd
@@ -98,30 +98,30 @@
 
 ## API
 
-- Subir o contêiner da API
+- Run API container
 
 ```
   docker run --rm -it -v %cd%/api:/work -w /work --name api -p 3000:3000 c/api lein repl
 ```
 
-- Comando para inicializar o servidor da API na porta 3000
+- Initialize API server on 3000
 
 ```
   (def s (start))
 ```
 
-- Comando para encerrar o servidor da API
+- Command to stop API server
 
 ```
   (stop s)
 ```
 
-- A requisição para a API deve ter o formato abaixo informado no body:
+- The API Request must have the following format in its body:
 
 ```
   {
-    "Owner": "owner1", <- Obrigatório
-    "Filters": {       <- Opcional
+    "Owner": "owner1", <- Mandatory
+    "Filters": {       <- Optional
       "Tags": [
         "tag1"
       ]
